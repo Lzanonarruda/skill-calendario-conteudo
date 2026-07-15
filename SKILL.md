@@ -41,6 +41,7 @@ Criar posts um a um é lento. Esta skill automatiza o planejamento mensal comple
 - **Chama:** `/criar-carrossel-instagram` como skill (briefing pré-preenchido — sem perguntar ao usuário), para posts marcados como carrossel no plano
 - **Chama:** `/criar-copy-gmn` como skill, pra todo post do lote, depois da arte de Instagram gerada
 - **Chama:** `/criar-thumbnail-gmn` como skill, pra todo post do lote, depois da copy de GMN gerada
+- **Lê:** `{cliente}/Posts/CALENDÁRIO OFICIAL – [MÊS].md` do mês corrente e, quando a janela de 15 dias cruzar a virada do mês, também o do mês anterior (Passo 2.0 — anti-repetição de tema)
 - **Escreve:** `{cliente}/Posts/CALENDÁRIO OFICIAL – [MÊS].md` — inclui a seção `## Google Meu Negócio`, escrita automaticamente por `/criar-copy-gmn` durante o lote, não por esta skill diretamente
 - **Cria:** `{cliente}/Posts/AAAA-MM/` + arquivos `.png` de cada post único, ou subpasta com `slide_XX.png` de cada carrossel; `{cliente}/GMN/Thumbnails/<AAAA-MM-DD>-<tema>/` + `copy.md` e `thumbnail.png` de cada post
 
@@ -52,6 +53,7 @@ Criar posts um a um é lento. Esta skill automatiza o planejamento mensal comple
 
 Perguntar em uma única mensagem (não picotar):
 
+- Objetivo do período: qual é o foco principal agora — captação de clientes novos, fidelização de quem já compra, lançamento de produto/serviço, ou institucional/manutenção de presença? Pergunta aberta, não múltipla escolha fechada: se a resposta for híbrida ou não encaixar limpo em nenhuma dessas, perguntar como o usuário quer ponderar a distribuição de categorias em vez de forçar encaixe. Nunca assumir um objetivo padrão sem perguntar
 - Período: semana, quinzena, mês ou intervalo de dias específico? (qual exatamente — ex: "julho 2026", "22 a 27/07", "próximos 6 dias")
 - Volume: quantos posts no total, ou por semana? (padrão: 3 por semana corrida). Se o período informado não for uma semana/quinzena/mês inteiros, calcular o volume proporcional ao padrão semanal (3 posts/semana) arredondando pro inteiro mais próximo e informar esse cálculo ao usuário antes de seguir — a menos que ele já tenha dito quantos posts quer no total
 - Eventos especiais: alguma conquista de cliente? Data comemorativa? Campanha ativa?
@@ -59,16 +61,28 @@ Perguntar em uma única mensagem (não picotar):
 
 ### Passo 2 — Geração do plano
 
+**Passo 2.0 — Verificar temas recentes (anti-repetição, janela de 15 dias).** Antes de sugerir qualquer tema:
+
+1. Calcular a janela: pegar a data mais antiga do lote que está sendo planejado (Passo 1) e voltar 15 dias — esse é o limite inferior
+2. Ler `{cliente}/Posts/CALENDÁRIO OFICIAL – [MÊS].md` do mês corrente. Se o limite inferior cair no mês anterior (ex: planejando 1–6/08, a janela volta até 17/07), ler também o calendário desse mês anterior
+3. Se nenhum desses arquivos existir ainda (cliente novo, ou primeiro calendário gerado para ele), pular esta verificação silenciosamente — sem erro, sem bloquear o fluxo
+4. Extrair as colunas Data + Tema de cada linha, mantendo só as linhas cuja Data cai dentro da janela de 15 dias — essa é a lista de "temas recentes"
+5. Ao montar cada tema novo no restante do Passo 2, avaliar semanticamente (não por comparação literal de texto) se ele cobre o mesmo assunto/ângulo de algum item da lista de temas recentes. Pergunta-guia: *"um seguidor que viu os dois posts sentiria que é o mesmo conteúdo reciclado com outras palavras?"* Se sim, é repetição — descartar esse tema e escolher outro. Mesmo tópico geral abordado por ângulo genuinamente diferente (ex: "dica de manutenção preventiva" vs. "erro comum que causa multa" no mesmo nicho) não conta como repetição
+6. Se não sobrar alternativa plausível pra alguma categoria depois de aplicar a exclusão, não forçar a repetição em silêncio — sinalizar isso ao usuário na tabela do Passo 3, junto com o tema recente que colidiria, para ele decidir
+
 Com as respostas:
 
 1. Identificar datas comemorativas relevantes ao segmento do cliente (ver "Contexto do cliente" no brand-profile)
 2. Consultar `{cliente}/keywords-seo-gmn.md` — seções "Tendências em Crescimento" e "Cauda Longa — Prioridade de Conversão" — para priorizar temas com alta intenção de busca:
-   - Incluir ao menos 1 tema de tendência e 1 de cauda longa por quinzena (14 dias)
-   - **Se o período total for menor que uma quinzena** (ex: uma semana, ou um intervalo curto como 6 dias), aplicar a mesma exigência ao período inteiro em vez de dividir por quinzena: garantir ao menos 1 tema de tendência e 1 de cauda longa dentro dele
-   - Marcar esses temas com ⭐ na tabela para o usuário identificar rapidamente
+   - Essas duas listas abastecem preferencialmente as categorias que naturalmente comportam keyword: **Educativo** (post único e carrossel) e **Dicas/Listicle** (carrossel). Nelas, priorizar sempre um tema de tendência ou cauda longa ainda não usado no período corrente, em vez de criar um tema livre — só cair para tema livre nessas categorias quando as duas listas se esgotarem
+   - Categorias que não combinam com keyword por natureza — Conquista/prova social (protagonista nomeado), Institucional/campanha (data especial), Engajamento (reflexão/curiosidade) — continuam com tema livre, sem obrigação de keyword
+   - Marcar todo tema de tendência/cauda longa efetivamente usado com ⭐ na tabela, para o usuário identificar rapidamente
 3. Mapear mix de tipos de post por semana:
    - **Post único** — usar as 4 categorias de sempre: Conquista/prova social (protagonista nomeado), Educativo (dica, boas práticas, informação relevante ao segmento), Institucional/campanha (data especial), Engajamento (reflexão, curiosidade, interação)
    - **Carrossel** — usar as 5 categorias próprias de `/criar-carrossel-instagram` (não as 4 acima, são taxonomias diferentes): Educativo, Depoimento, Dicas/Listicle, Marco Numérico, Data Comemorativa. Nem todo tema de post único vira carrossel de forma direta: "Conquista/prova social" isolada normalmente fica melhor como post único (Layout D); só considerar carrossel se o conteúdo render pra uma dessas 5 categorias (ex: depoimento longo → Depoimento; vários erros/dicas → Dicas/Listicle)
+   - **Nota de classificação — homonímia entre taxonomias:** "Educativo" existe nas duas listas acima com o mesmo nome, mas não é a mesma categoria — post único Educativo vira Layout B; carrossel Educativo vira uma sequência própria de slides. Mesmo rótulo, execução diferente. Sempre checar qual das duas listas está em uso (definida pelo Formato da linha) antes de interpretar o valor de Tipo
+   - **Ponderar pelo objetivo do período (Passo 1):** ajustar a proporção das categorias conforme o objetivo informado — captação: priorizar Educativo + Oferta; fidelização: priorizar Depoimento/Conquista + Engajamento; lançamento: priorizar Institucional/Campanha + Oferta; institucional/manutenção: manter o mix padrão equilibrado. Isso é peso de sugestão pro plano inicial, não regra rígida — o usuário ainda pode reequilibrar linha por linha no Passo 3
+   - **Cadência entre categorias:** ao ordenar os posts por Data, evitar 2 posts consecutivos com o mesmo Tipo **e** mesmo Formato (ex: dois post único Educativo seguidos) — mudar o Formato já quebra a sensação de repetição mesmo com Tipo igual. Se o mix indicar repetição do mesmo par Tipo+Formato, intercalar com pelo menos 1 post diferente entre eles. Exceção: períodos muito curtos (2–3 posts) onde a repetição é inevitável dado o mix necessário — sinalizar isso ao usuário na tabela do Passo 3 em vez de forçar uma categoria artificial só pra quebrar a sequência
 4. Para posts de **formato único**, consultar a "Matriz de escolha de layout" em `_sistema/referencias/templates-post-instagram.md` e sugerir o tipo adequado (A, A2, B, C, D, E, E2, F, G, H ou T) para cada post. Para posts de **formato carrossel**, sugerir o número de slides e o papel de cada um (Capa / Desenvolvimento / Exemplo / Checklist / Fechamento-CTA — ver "Família Carrossel" no mesmo doc), em vez de um único layout
 5. Apresentar tabela para aprovação:
 
