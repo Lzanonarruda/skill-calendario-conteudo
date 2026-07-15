@@ -52,8 +52,8 @@ Criar posts um a um é lento. Esta skill automatiza o planejamento mensal comple
 
 Perguntar em uma única mensagem (não picotar):
 
-- Período: semana, quinzena ou mês? (qual exatamente — ex: "julho 2026")
-- Volume: quantos posts por semana? (padrão: 3)
+- Período: semana, quinzena, mês ou intervalo de dias específico? (qual exatamente — ex: "julho 2026", "22 a 27/07", "próximos 6 dias")
+- Volume: quantos posts no total, ou por semana? (padrão: 3 por semana corrida). Se o período informado não for uma semana/quinzena/mês inteiros, calcular o volume proporcional ao padrão semanal (3 posts/semana) arredondando pro inteiro mais próximo e informar esse cálculo ao usuário antes de seguir — a menos que ele já tenha dito quantos posts quer no total
 - Eventos especiais: alguma conquista de cliente? Data comemorativa? Campanha ativa?
 - Formatos predominantes: post único (feed 4:5), carrossel, quadrado ou stories? (padrão: feed 4:5 — carrossel é recomendado pra temas educativos/listicle com mais de 2–3 pontos, ver "Quantidade recomendada de slides" em `templates-post-instagram.md`)
 
@@ -63,8 +63,8 @@ Com as respostas:
 
 1. Identificar datas comemorativas relevantes ao segmento do cliente (ver "Contexto do cliente" no brand-profile)
 2. Consultar `{cliente}/keywords-seo-gmn.md` — seções "Tendências em Crescimento" e "Cauda Longa — Prioridade de Conversão" — para priorizar temas com alta intenção de busca:
-   - Incluir ao menos 1 tema de tendência por quinzena
-   - Incluir ao menos 1 tema de cauda longa por quinzena
+   - Incluir ao menos 1 tema de tendência e 1 de cauda longa por quinzena (14 dias)
+   - **Se o período total for menor que uma quinzena** (ex: uma semana, ou um intervalo curto como 6 dias), aplicar a mesma exigência ao período inteiro em vez de dividir por quinzena: garantir ao menos 1 tema de tendência e 1 de cauda longa dentro dele
    - Marcar esses temas com ⭐ na tabela para o usuário identificar rapidamente
 3. Mapear mix de tipos de post por semana:
    - **Post único** — usar as 4 categorias de sempre: Conquista/prova social (protagonista nomeado), Educativo (dica, boas práticas, informação relevante ao segmento), Institucional/campanha (data especial), Engajamento (reflexão, curiosidade, interação)
