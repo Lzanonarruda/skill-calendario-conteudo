@@ -1,5 +1,5 @@
 ---
-description: Planeja o calendário mensal de posts do cliente e executa a geração em lote via /criar-post-instagram e /criar-carrossel-instagram
+description: Planeja o calendário mensal de posts do cliente e executa a geração em lote via /criar-post-instagram, /criar-carrossel-instagram, /criar-copy-gmn e /criar-thumbnail-gmn
 when_to_use: calendário de conteúdo, planejar posts do mês, lote de posts, semana de conteúdo, posts da semana, programação mensal
 ---
 
@@ -16,7 +16,7 @@ when_to_use: calendário de conteúdo, planejar posts do mês, lote de posts, se
 
 ## Pré-requisito — Brand Profile
 
-Antes de executar, confirmar que `{cliente}/brand-profile.md` está acessível (schema completo em `_sistema/referencias/brand-profile-conteudo-visual.md`) — identidade visual, vocabulário do público, CTA padrão e restrições de marca estão neste arquivo. As skills `/criar-post-instagram` e `/criar-carrossel-instagram`, chamadas no Passo 4, carregam o brand-profile como pré-requisito próprio.
+Antes de executar, confirmar que `{cliente}/brand-profile.md` está acessível (schema completo em `_sistema/referencias/brand-profile-conteudo-visual.md`) — identidade visual, vocabulário do público, CTA padrão e restrições de marca estão neste arquivo. As skills `/criar-post-instagram`, `/criar-carrossel-instagram`, `/criar-copy-gmn` e `/criar-thumbnail-gmn`, chamadas no Passo 4, carregam o brand-profile como pré-requisito próprio.
 
 ---
 
@@ -28,7 +28,7 @@ Usuário quer planejar vários posts de um cliente de uma vez. Variações: "pla
 
 ## Por que esta skill existe
 
-Criar posts um a um é lento. Esta skill automatiza o planejamento mensal completo: mapeia datas, sugere temas e layouts, apresenta o plano para aprovação e executa a geração de todos os posts em lote — cada um com PNG pronto, sem ferramenta externa.
+Criar posts um a um é lento. Esta skill automatiza o planejamento mensal completo: mapeia datas, sugere temas e layouts, apresenta o plano para aprovação e executa a geração de todos os posts em lote — cada um já com PNG de Instagram, copy de GMN e thumbnail de GMN prontos, sem ferramenta externa.
 
 ---
 
@@ -39,8 +39,10 @@ Criar posts um a um é lento. Esta skill automatiza o planejamento mensal comple
 - **Lê:** `{cliente}/keywords-seo-gmn.md` (seções Tendências + Cauda Longa — Passo 2)
 - **Chama:** `/criar-post-instagram` como skill (briefing pré-preenchido — sem perguntar ao usuário), para posts de slide único
 - **Chama:** `/criar-carrossel-instagram` como skill (briefing pré-preenchido — sem perguntar ao usuário), para posts marcados como carrossel no plano
-- **Escreve:** `{cliente}/Posts/CALENDÁRIO OFICIAL – [MÊS].md`
-- **Cria:** `{cliente}/Posts/AAAA-MM/` + arquivos `.png` de cada post único, ou subpasta com `slide_XX.png` de cada carrossel
+- **Chama:** `/criar-copy-gmn` como skill, pra todo post do lote, depois da arte de Instagram gerada
+- **Chama:** `/criar-thumbnail-gmn` como skill, pra todo post do lote, depois da copy de GMN gerada
+- **Escreve:** `{cliente}/Posts/CALENDÁRIO OFICIAL – [MÊS].md` — inclui a seção `## Google Meu Negócio`, escrita automaticamente por `/criar-copy-gmn` durante o lote, não por esta skill diretamente
+- **Cria:** `{cliente}/Posts/AAAA-MM/` + arquivos `.png` de cada post único, ou subpasta com `slide_XX.png` de cada carrossel; `{cliente}/GMN/Thumbnails/<AAAA-MM-DD>-<tema>/` + `copy.md` e `thumbnail.png` de cada post
 
 ---
 
@@ -90,17 +92,19 @@ Não avançar sem confirmação explícita.
 
 ### Passo 4 — Execução em lote
 
-Para cada post na tabela aprovada:
+Para cada post na tabela aprovada, nesta ordem — arte de Instagram → copy GMN → thumbnail GMN — antes de passar pro próximo post da lista:
 
 1. Montar briefing completo a partir da linha da tabela — contexto, protagonista, formato, layout/slides, copy já definidos na etapa de planejamento
-2. Executar a skill correspondente ao **Formato** da linha, sem perguntar ao usuário (o briefing da tabela já responde todas as perguntas de coleta da skill atômica):
+2. **Arte de Instagram.** Executar a skill correspondente ao **Formato** da linha, sem perguntar ao usuário (o briefing da tabela já responde todas as perguntas de coleta da skill atômica):
    - **Post único** → `/criar-post-instagram`, passando o layout (A–H/T) definido no plano
    - **Carrossel** → `/criar-carrossel-instagram`, passando tipo de conteúdo (uma das 5 categorias do Passo 2), tema e número de slides definidos no plano. **CTA:** usar o CTA padrão do brand-profile por padrão (a tabela não tem coluna própria de CTA); só passar um CTA diferente se o usuário tiver indicado um específico para aquela linha na revisão do Passo 3
-3. Ao final de cada item informar:
-   - Post único: `Post [#] gerado → {cliente}/Posts/AAAA-MM/nome.png`
-   - Carrossel: `Post [#] gerado (carrossel, N slides) → {cliente}/Posts/AAAA-MM/<data>-<tema>/`
-4. Continuar para o próximo
-5. Se um post falhar: registrar "❌ FALHOU" e continuar os demais — não interromper o lote
+3. **Copy GMN.** Executar `/criar-copy-gmn` (Fluxo 1 dela, post específico) passando o mesmo tema e data da linha, sem perguntar ao usuário — sempre, pra todo post do lote, independente do tipo. Isso já escreve a seção `## Google Meu Negócio` no calendário e salva `copy.md` em `{cliente}/GMN/Thumbnails/<AAAA-MM-DD>-<tema>/`
+4. **Thumbnail GMN.** Executar `/criar-thumbnail-gmn` passando o mesmo tema — sempre, pra todo post do lote, independente do tipo. Salva `thumbnail.png` na mesma pasta da copy
+5. Ao final de cada item informar:
+   - Post único: `Post [#] gerado → {cliente}/Posts/AAAA-MM/nome.png` + `GMN → {cliente}/GMN/Thumbnails/<data>-<tema>/`
+   - Carrossel: `Post [#] gerado (carrossel, N slides) → {cliente}/Posts/AAAA-MM/<data>-<tema>/` + `GMN → {cliente}/GMN/Thumbnails/<data>-<tema>/`
+6. Continuar para o próximo post
+7. Se qualquer uma das 3 etapas (arte, copy, thumbnail) falhar: registrar "❌ FALHOU" só naquela etapa, seguir com as demais etapas do mesmo post se possível, e continuar pro próximo post — nunca interromper o lote inteiro por causa de uma etapa
 
 ### Passo 5 — Output final
 
@@ -118,11 +122,11 @@ gerado: AAAA-MM-DD
 
 # Calendário Oficial — [MÊS AAAA]
 
-| # | Data | Tema | Tipo | Formato | Layout/Slides | Protagonista | Arquivo |
-|---|------|------|------|---------|----------------|--------------|---------|
-| 1 | 22/07 | Conquista de Maria Silva | Conquista | Post único | D | Maria Silva | Posts/2026-07/post-01-conquista-maria.png |
-| 2 | 24/07 | Dica de segurança | Educativo | Post único | B | — | Posts/2026-07/post-02-educativo-dica.png |
-| 3 | 26/07 | 5 erros comuns | Dicas/Listicle | Carrossel (6 slides) | Capa→4 itens→CTA | — | Posts/2026-07/2026-07-26-5erros/ |
+| # | Data | Tema | Tipo | Formato | Layout/Slides | Protagonista | Arquivo | GMN |
+|---|------|------|------|---------|----------------|--------------|---------|-----|
+| 1 | 22/07 | Conquista de Maria Silva | Conquista | Post único | D | Maria Silva | Posts/2026-07/post-01-conquista-maria.png | ✅ |
+| 2 | 24/07 | Dica de segurança | Educativo | Post único | B | — | Posts/2026-07/post-02-educativo-dica.png | ✅ |
+| 3 | 26/07 | 5 erros comuns | Dicas/Listicle | Carrossel (6 slides) | Capa→4 itens→CTA | — | Posts/2026-07/2026-07-26-5erros/ | ✅ |
 
 ## Legendas
 
@@ -133,12 +137,16 @@ gerado: AAAA-MM-DD
 ### Post 2 — 24/07 — Dica de segurança
 
 [copiado de Posts/2026-07/post-02-educativo-dica/legenda.md]
+
+## Google Meu Negócio
+
+[esta seção é escrita por `/criar-copy-gmn` durante o Passo 4, não por esta skill — cada bloco `### Post N — Data — Tema` é inserido por ela mesma, no formato já documentado na skill]
 ```
 
-**Nunca gerar o texto da legenda de novo nesta etapa.** `/criar-post-instagram` e `/criar-carrossel-instagram` já criam `legenda.md` na pasta de cada post/carrossel (Passo 2.7 e Passo 1.10 delas, respectivamente) — a seção "Legendas" deste calendário é uma cópia literal do conteúdo desses arquivos, não uma nova geração. Isso evita que a legenda do calendário e a da pasta do post divirjam com o tempo.
+**Nunca gerar o texto da legenda nem da copy GMN de novo nesta etapa.** `/criar-post-instagram` e `/criar-carrossel-instagram` já criam `legenda.md` na pasta de cada post/carrossel (Passo 2.7 e Passo 1.10 delas, respectivamente), e `/criar-copy-gmn` já escreve a seção `## Google Meu Negócio` sozinha durante o Passo 4. A seção "Legendas" deste calendário é uma cópia literal do conteúdo dos arquivos `legenda.md`, não uma nova geração — isso evita que a legenda do calendário e a da pasta do post divirjam com o tempo. A seção GMN nunca precisa dessa cópia manual porque já é escrita direto no lugar certo pela própria skill.
 
-3. Apresentar tabela final com status (✅ gerado / ❌ falhou)
-4. Informar: "[N] posts gerados em `{cliente}/Posts/AAAA-MM/`"
+3. Apresentar tabela final com status por post e por etapa (✅ gerado / ❌ falhou) — a coluna **GMN** cobre copy + thumbnail juntos; se só uma das duas falhar, marcar "⚠️ parcial" e detalhar qual etapa faltou no texto de confirmação
+4. Informar: "[N] posts gerados em `{cliente}/Posts/AAAA-MM/`, com copy e thumbnail de GMN em `{cliente}/GMN/Thumbnails/`"
 
 ---
 
@@ -147,4 +155,5 @@ gerado: AAAA-MM-DD
 - Respeitar a Regra de fundo e a paleta definidas no `{cliente}/brand-profile.md` — não assumir um padrão fixo de cor nem de fundo, cada cliente define a própria regra
 - Se o formato escolhido for carrossel, respeitar a quantidade recomendada de slides por tipo (ver "Quantidade recomendada de slides" em `templates-post-instagram.md` — evitar acima de 8)
 - Não avançar para Passo 4 sem aprovação explícita do plano no Passo 3
-- Se um post falhar na geração, registrar e continuar — não interromper o lote inteiro
+- Se um post falhar na geração (arte, copy GMN ou thumbnail GMN), registrar e continuar — não interromper o lote inteiro
+- Copy GMN e thumbnail GMN são geradas pra todo post do lote, sem exceção por tipo — não pular essas duas etapas mesmo em posts onde pareçam menos óbvias (ex: avaliação/depoimento — nesse caso `/criar-copy-gmn` já sabe transformar o depoimento num ângulo educativo em vez de narrar a cena, conforme o caso especial documentado nela)
