@@ -61,13 +61,13 @@ Perguntar em uma única mensagem (não picotar):
 
 Com as respostas:
 
-1. Identificar datas comemorativas relevantes ao segmento do cliente (ver "Contexto do cliente" no brand-profile — ex: para uma autoescola, datas de trânsito; para uma clínica, datas de saúde)
+1. Identificar datas comemorativas relevantes ao segmento do cliente (ver "Contexto do cliente" no brand-profile)
 2. Consultar `{cliente}/keywords-seo-gmn.md` — seções "Tendências em Crescimento" e "Cauda Longa — Prioridade de Conversão" — para priorizar temas com alta intenção de busca:
    - Incluir ao menos 1 tema de tendência por quinzena
    - Incluir ao menos 1 tema de cauda longa por quinzena
    - Marcar esses temas com ⭐ na tabela para o usuário identificar rapidamente
 3. Mapear mix de tipos de post por semana:
-   - **Post único** — usar as 4 categorias de sempre: Conquista/prova social (protagonista nomeado), Educativo (dica, segurança, legislação), Institucional/campanha (data especial), Engajamento (reflexão, curiosidade, interação)
+   - **Post único** — usar as 4 categorias de sempre: Conquista/prova social (protagonista nomeado), Educativo (dica, boas práticas, informação relevante ao segmento), Institucional/campanha (data especial), Engajamento (reflexão, curiosidade, interação)
    - **Carrossel** — usar as 5 categorias próprias de `/criar-carrossel-instagram` (não as 4 acima, são taxonomias diferentes): Educativo, Depoimento, Dicas/Listicle, Marco Numérico, Data Comemorativa. Nem todo tema de post único vira carrossel de forma direta: "Conquista/prova social" isolada normalmente fica melhor como post único (Layout D); só considerar carrossel se o conteúdo render pra uma dessas 5 categorias (ex: depoimento longo → Depoimento; vários erros/dicas → Dicas/Listicle)
 4. Para posts de **formato único**, consultar a "Matriz de escolha de layout" em `_sistema/referencias/templates-post-instagram.md` e sugerir o tipo adequado (A, A2, B, C, D, E, E2, F, G, H ou T) para cada post. Para posts de **formato carrossel**, sugerir o número de slides e o papel de cada um (Capa / Desenvolvimento / Exemplo / Checklist / Fechamento-CTA — ver "Família Carrossel" no mesmo doc), em vez de um único layout
 5. Apresentar tabela para aprovação:
@@ -76,7 +76,7 @@ Com as respostas:
 | # | Data | Tema | Tipo | Formato | Layout/Slides | Protagonista |
 |---|------|------|------|---------|----------------|--------------|
 | 1 | 22/07 | Conquista de Maria Silva | Conquista | Post único | D — Conquista/Prova social | Maria Silva |
-| 2 | 24/07 | Dica de segurança | Educativo | Post único | B — Educativo | — |
+| 2 | 24/07 | Dica prática do segmento | Educativo | Post único | B — Educativo | — |
 | 3 | 26/07 | 5 erros comuns | Dicas/Listicle | Carrossel (6 slides) | Capa → 4 itens → Fechamento/CTA | — |
 | 4 | 28/07 | Data comemorativa | Institucional | Post único | F — Data comemorativa | — |
 ```
@@ -125,7 +125,7 @@ gerado: AAAA-MM-DD
 | # | Data | Tema | Tipo | Formato | Layout/Slides | Protagonista | Arquivo | GMN |
 |---|------|------|------|---------|----------------|--------------|---------|-----|
 | 1 | 22/07 | Conquista de Maria Silva | Conquista | Post único | D | Maria Silva | Posts/2026-07/post-01-conquista-maria.png | ✅ |
-| 2 | 24/07 | Dica de segurança | Educativo | Post único | B | — | Posts/2026-07/post-02-educativo-dica.png | ✅ |
+| 2 | 24/07 | Dica prática do segmento | Educativo | Post único | B | — | Posts/2026-07/post-02-educativo-dica.png | ✅ |
 | 3 | 26/07 | 5 erros comuns | Dicas/Listicle | Carrossel (6 slides) | Capa→4 itens→CTA | — | Posts/2026-07/2026-07-26-5erros/ | ✅ |
 
 ## Legendas
@@ -134,7 +134,7 @@ gerado: AAAA-MM-DD
 
 [copiado de Posts/2026-07/post-01-conquista-maria/legenda.md]
 
-### Post 2 — 24/07 — Dica de segurança
+### Post 2 — 24/07 — Dica prática do segmento
 
 [copiado de Posts/2026-07/post-02-educativo-dica/legenda.md]
 
