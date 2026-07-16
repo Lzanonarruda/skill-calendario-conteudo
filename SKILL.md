@@ -106,6 +106,8 @@ Não avançar sem confirmação explícita.
 
 ### Passo 4 — Execução em lote
 
+**Passo 4.0 — Criar checklist de execução (obrigatório):** antes de iniciar o lote, criar uma lista TodoWrite com 1 item por post da tabela aprovada, cobrindo as 3 etapas daquele post (arte de Instagram + copy GMN + thumbnail GMN). Marcar `completed` só quando as 3 etapas do post tiverem rodado com sucesso — um post com qualquer etapa "❌ FALHOU" (ver item 7 abaixo) fica com o item pendente, não `completed`. Ver [[auditoria-execucao-skills]].
+
 Para cada post na tabela aprovada, nesta ordem — arte de Instagram → copy GMN → thumbnail GMN — antes de passar pro próximo post da lista:
 
 1. Montar briefing completo a partir da linha da tabela — contexto, protagonista, formato, layout/slides, copy já definidos na etapa de planejamento
@@ -121,6 +123,8 @@ Para cada post na tabela aprovada, nesta ordem — arte de Instagram → copy GM
 7. Se qualquer uma das 3 etapas (arte, copy, thumbnail) falhar: registrar "❌ FALHOU" só naquela etapa, seguir com as demais etapas do mesmo post se possível, e continuar pro próximo post — nunca interromper o lote inteiro por causa de uma etapa
 
 ### Passo 5 — Output final
+
+**Auditoria antes de apresentar (obrigatório):** reconferir a lista TodoWrite do Passo 4.0 — se algum post ficou com item pendente (etapa "❌ FALHOU"), reexecutar a etapa faltante daquele post antes de declarar o lote concluído. Nunca apresentar o output final com posts incompletos sem sinalizar isso explicitamente ao usuário (ver [[auditoria-execucao-skills]]).
 
 Ao concluir todos os posts:
 
