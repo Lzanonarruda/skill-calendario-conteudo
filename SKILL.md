@@ -42,7 +42,7 @@ Criar posts um a um é lento. Esta skill automatiza o planejamento mensal comple
 - **Chama:** `/criar-copy-gmn` como skill, pra todo post do lote, depois da arte de Instagram gerada
 - **Chama:** `/criar-thumbnail-gmn` como skill, pra todo post do lote, depois da copy de GMN gerada
 - **Lê:** `{cliente}/Posts/CALENDÁRIO OFICIAL – [MÊS].md` do mês corrente e, quando a janela de 15 dias cruzar a virada do mês, também o do mês anterior (Passo 2.0 — anti-repetição de tema)
-- **Escreve:** `{cliente}/Posts/CALENDÁRIO OFICIAL – [MÊS].md` — inclui a seção `## Google Meu Negócio`, escrita automaticamente por `/criar-copy-gmn` durante o lote, não por esta skill diretamente
+- **Escreve:** `{cliente}/Posts/CALENDÁRIO OFICIAL – [MÊS].md` — inclui a seção `## Google Meu Negócio`, escrita automaticamente por `/criar-copy-gmn` durante o lote, não por esta skill diretamente. Também escreve a coluna `Composição proposta` da tabela (ver Passo 2, item 4) — esta skill nunca escreve `Composição usada`, que é responsabilidade exclusiva de `/criar-post-instagram`, preenchida só depois da exportação real (ver `criar-post-instagram/SKILL.md`)
 - **Cria:** `{cliente}/Posts/AAAA-MM/` + arquivos `.png` de cada post único, ou subpasta com `slide_XX.png` de cada carrossel; `{cliente}/GMN/Thumbnails/<AAAA-MM-DD>-<tema>/` + `copy.md` e `thumbnail.png` de cada post
 
 ---
@@ -84,6 +84,8 @@ Com as respostas:
    - **Ponderar pelo objetivo do período (Passo 1):** ajustar a proporção das categorias conforme o objetivo informado — captação: priorizar Educativo + Oferta; fidelização: priorizar Depoimento/Conquista + Engajamento; lançamento: priorizar Institucional/Campanha + Oferta; institucional/manutenção: manter o mix padrão equilibrado. Isso é peso de sugestão pro plano inicial, não regra rígida — o usuário ainda pode reequilibrar linha por linha no Passo 3
    - **Cadência entre categorias:** ao ordenar os posts por Data, evitar 2 posts consecutivos com o mesmo Tipo **e** mesmo Formato (ex: dois post único Educativo seguidos) — mudar o Formato já quebra a sensação de repetição mesmo com Tipo igual. Se o mix indicar repetição do mesmo par Tipo+Formato, intercalar com pelo menos 1 post diferente entre eles. Exceção: períodos muito curtos (2–3 posts) onde a repetição é inevitável dado o mix necessário — sinalizar isso ao usuário na tabela do Passo 3 em vez de forçar uma categoria artificial só pra quebrar a sequência
 4. Para posts de **formato único**, consultar a "Matriz de escolha de layout" em `_sistema/referencias/templates-post-instagram.md` e sugerir o tipo adequado (A, A2, B, C, D, E, E2, F, G, H ou T) para cada post. Para posts de **formato carrossel**, sugerir o número de slides e o papel de cada um (Capa / Desenvolvimento / Exemplo / Checklist / Fechamento-CTA — ver "Família Carrossel" no mesmo doc), em vez de um único layout
+
+   **Coluna `Composição proposta` (Passo 5, tabela final) — regra transitória:** preencher sempre com `—`. O motor de comparação entre layouts oficiais e composições `CMP-*` está documentado em `_sistema/referencias/selecao-composicoes-post-instagram.md`, mas **ainda não foi ativado** — esta skill não escolhe `CMP-*` nem monta um ID estruturado de layout oficial neste momento. Essa regra transitória só é substituída mediante instrução explícita de ativação. Quando ativado, a proposta ali registrada é só um dado de planejamento: não reserva a composição, não obriga `/criar-post-instagram` a usá-la, e pode ficar diferente da `Composição usada` final — se uma proposta for descartada durante a execução, a célula de proposta **não é reescrita retroativamente**.
 5. Apresentar tabela para aprovação:
 
 ```
@@ -106,7 +108,7 @@ Não avançar sem confirmação explícita.
 
 ### Passo 4 — Execução em lote
 
-**Passo 4.0 — Criar checklist de execução (obrigatório):** antes de iniciar o lote, criar uma lista TodoWrite com 1 item por post da tabela aprovada, cobrindo as 3 etapas daquele post (arte de Instagram + copy GMN + thumbnail GMN). Marcar `completed` só quando as 3 etapas do post tiverem rodado com sucesso — um post com qualquer etapa "❌ FALHOU" (ver item 7 abaixo) fica com o item pendente, não `completed`. Ver [[auditoria-execucao-skills]].
+**Passo 4.0 — Criar checklist de execução (obrigatório):** antes de iniciar o lote, gerar um identificador curto pra esta execução (ex: horário atual) e invocar `/auditoria-execucao` em modo bootstrap, passando `calendário-conteudo:<id-execucao>` e 1 gate por post da tabela aprovada, cobrindo as 3 etapas daquele post (arte de Instagram + copy GMN + thumbnail GMN). Um post com qualquer etapa "❌ FALHOU" (ver item 7 abaixo) fica com o item pendente, não `completed`. Guardar esse `<id-execucao>` pra usar também no fechamento.
 
 Para cada post na tabela aprovada, nesta ordem — arte de Instagram → copy GMN → thumbnail GMN — antes de passar pro próximo post da lista:
 
@@ -124,7 +126,7 @@ Para cada post na tabela aprovada, nesta ordem — arte de Instagram → copy GM
 
 ### Passo 5 — Output final
 
-**Auditoria antes de apresentar (obrigatório):** reconferir a lista TodoWrite do Passo 4.0 — se algum post ficou com item pendente (etapa "❌ FALHOU"), reexecutar a etapa faltante daquele post antes de declarar o lote concluído. Nunca apresentar o output final com posts incompletos sem sinalizar isso explicitamente ao usuário (ver [[auditoria-execucao-skills]]).
+**Auditoria antes de apresentar (obrigatório):** invocar `/auditoria-execucao` em modo fechamento, passando `calendário-conteudo:<id-execucao>` (o mesmo gerado no bootstrap). Se algum post ficou pendente (`AUDITORIA_INCOMPLETA`, etapa "❌ FALHOU"), reexecutar a etapa faltante daquele post antes de declarar o lote concluído. Nunca apresentar o output final com posts incompletos sem sinalizar isso explicitamente ao usuário.
 
 Ao concluir todos os posts:
 
@@ -140,11 +142,11 @@ gerado: AAAA-MM-DD
 
 # Calendário Oficial — [MÊS AAAA]
 
-| # | Data | Tema | Tipo | Formato | Layout/Slides | Protagonista | Arquivo | GMN |
-|---|------|------|------|---------|----------------|--------------|---------|-----|
-| 1 | 22/07 | Conquista de Maria Silva | Conquista | Post único | D | Maria Silva | Posts/2026-07/post-01-conquista-maria.png | ✅ |
-| 2 | 24/07 | Dica prática do segmento | Educativo | Post único | B | — | Posts/2026-07/post-02-educativo-dica.png | ✅ |
-| 3 | 26/07 | 5 erros comuns | Dicas/Listicle | Carrossel (6 slides) | Capa→4 itens→CTA | — | Posts/2026-07/2026-07-26-5erros/ | ✅ |
+| # | Data | Tema | Tipo | Formato | Layout/Slides | Composição proposta | Composição usada | Protagonista | Arquivo | GMN |
+|---|------|------|------|---------|----------------|----------------------|-------------------|--------------|---------|-----|
+| 1 | 22/07 | Conquista de Maria Silva | Conquista | Post único | D | — | — | Maria Silva | Posts/2026-07/post-01-conquista-maria.png | ✅ |
+| 2 | 24/07 | Dica prática do segmento | Educativo | Post único | B | — | — | — | Posts/2026-07/post-02-educativo-dica.png | ✅ |
+| 3 | 26/07 | 5 erros comuns | Dicas/Listicle | Carrossel (6 slides) | Capa→4 itens→CTA | — | — | — | Posts/2026-07/2026-07-26-5erros/ | ✅ |
 
 ## Legendas
 
@@ -175,3 +177,4 @@ gerado: AAAA-MM-DD
 - Não avançar para Passo 4 sem aprovação explícita do plano no Passo 3
 - Se um post falhar na geração (arte, copy GMN ou thumbnail GMN), registrar e continuar — não interromper o lote inteiro
 - Copy GMN e thumbnail GMN são geradas pra todo post do lote, sem exceção por tipo — não pular essas duas etapas mesmo em posts onde pareçam menos óbvias (ex: avaliação/depoimento — nesse caso `/criar-copy-gmn` já sabe transformar o depoimento num ângulo educativo em vez de narrar a cena, conforme o caso especial documentado nela)
+- Se o calendário do cliente usar seções de status (ex: `## Planejados` / `## Publicados`), mover uma linha entre elas nunca altera o schema da tabela: preservar `Formato`, `Tipo`, `Layout`, `Composição proposta`, `Composição usada` e `Arquivo` como células próprias, nunca embutir ID estruturado (`OFICIAL-*`/`CMP-*`) dentro do texto livre de `Layout`. Calendário legado sem esse schema continua compatível; migração retroativa de linhas antigas só ocorre com autorização explícita e quando os dados permitirem separação segura — nunca inferir `Tipo` ou `Composição usada` pela aparência de uma descrição ambígua
