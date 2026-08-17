@@ -142,11 +142,11 @@ gerado: AAAA-MM-DD
 
 # Calendário Oficial — [MÊS AAAA]
 
-| # | Data | Tema | Tipo | Formato | Layout/Slides | Composição proposta | Composição usada | Protagonista | Arquivo | GMN |
-|---|------|------|------|---------|----------------|----------------------|-------------------|--------------|---------|-----|
-| 1 | 22/07 | Conquista de Maria Silva | Conquista | Post único | D | — | — | Maria Silva | Posts/2026-07/post-01-conquista-maria.png | ✅ |
-| 2 | 24/07 | Dica prática do segmento | Educativo | Post único | B | — | — | — | Posts/2026-07/post-02-educativo-dica.png | ✅ |
-| 3 | 26/07 | 5 erros comuns | Dicas/Listicle | Carrossel (6 slides) | Capa→4 itens→CTA | — | — | — | Posts/2026-07/2026-07-26-5erros/ | ✅ |
+| # | Data | Tema | Formato | Tipo | Layout | Composição proposta | Composição usada | Arquivo |
+|---|------|------|---------|------|--------|----------------------|-------------------|---------|
+| 1 | 22/07 | Conquista de Maria Silva | Post único | Conquista | D | — | — | Posts/2026-07/post-01-conquista-maria.png |
+| 2 | 24/07 | Dica prática do segmento | Post único | Educativo | B | — | — | Posts/2026-07/post-02-educativo-dica.png |
+| 3 | 26/07 | 5 erros comuns | Carrossel (6 slides) | Dicas/Listicle | Capa→4 itens→CTA | — | — | Posts/2026-07/2026-07-26-5erros/ |
 
 ## Legendas
 
@@ -163,7 +163,7 @@ gerado: AAAA-MM-DD
 [esta seção é escrita por `/criar-copy-gmn` durante o Passo 4, não por esta skill — cada bloco `### Post N — Data — Tema` é inserido por ela mesma, no formato já documentado na skill]
 ```
 
-**Nunca gerar o texto da legenda nem da copy GMN de novo nesta etapa.** `/criar-post-instagram` e `/criar-carrossel-instagram` já criam `legenda.md` na pasta de cada post/carrossel (Passo 2.7 e Passo 1.10 delas, respectivamente), e `/criar-copy-gmn` já escreve a seção `## Google Meu Negócio` sozinha durante o Passo 4. A seção "Legendas" deste calendário é uma cópia literal do conteúdo dos arquivos `legenda.md`, não uma nova geração — isso evita que a legenda do calendário e a da pasta do post divirjam com o tempo. A seção GMN nunca precisa dessa cópia manual porque já é escrita direto no lugar certo pela própria skill.
+**Nunca gerar o texto da legenda nem da copy GMN de novo nesta etapa.** `/criar-post-instagram` e `/criar-carrossel-instagram` já criam `legenda.md` na pasta de cada post/carrossel (Passo 2.7 de cada uma delas — "Criar legenda", em ambas as skills), e `/criar-copy-gmn` já escreve a seção `## Google Meu Negócio` sozinha durante o Passo 4. A seção "Legendas" deste calendário é uma cópia literal do conteúdo dos arquivos `legenda.md`, não uma nova geração — isso evita que a legenda do calendário e a da pasta do post divirjam com o tempo. A seção GMN nunca precisa dessa cópia manual porque já é escrita direto no lugar certo pela própria skill.
 
 3. Apresentar tabela final com status por post e por etapa (✅ gerado / ❌ falhou) — a coluna **GMN** cobre copy + thumbnail juntos; se só uma das duas falhar, marcar "⚠️ parcial" e detalhar qual etapa faltou no texto de confirmação
 4. Informar: "[N] posts gerados em `{cliente}/Posts/AAAA-MM/`, com copy e thumbnail de GMN em `{cliente}/GMN/Thumbnails/`"
